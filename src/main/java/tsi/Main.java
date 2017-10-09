@@ -14,10 +14,39 @@ public class Main {
     }
 
     private static void start(Table table) {
-        List<Card> cards = table.createPack();
+
+        Stack stack1 = table.createStack(0.5, 0.5, 0.01, 0.00);
+        Stack stack2 = table.createStack(2.0, 0.5, 0.00, 0.2);
+        Stack stack3 = table.createStack(3.5, 0.5, 0.00, 0.2);
+        Stack stack4 = table.createStack(5.0, 0.5, 0.00, 0.2);
+        Stack stack5 = table.createStack(6.5, 0.5, 0.00, 0.2);
+
+        List<Card> cards = table.createPack(true);
         Collections.shuffle(cards);
-        Stack stack = table.createStack(1,1, 0.25, 0);
-            stack.setCards(cards);
-        }
+
+        stack1.setCards(cards);
+
+        table.onClick((stack, card) -> {
+            if (stack != stack1) {
+                moveLastCard(stack1, stack);
+            }
+        });
     }
+
+
+    private static void moveLastCard(Stack stackFrom, Stack stackTo) {
+        List<Card> source = stackFrom.getCards();
+        if (source.isEmpty()) {
+            return;
+        }
+        Card last = source.get(source.size() - 1);
+        last.setFaceDown(false);
+
+        List<Card> target = stackTo.getCards();
+        target.add(last);
+
+        stackTo.setCards(target);
+    }
+
+}
 
